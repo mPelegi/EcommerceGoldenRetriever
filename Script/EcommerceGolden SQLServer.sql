@@ -48,7 +48,7 @@ CREATE TABLE CarteiraVacinacao (
 
 CREATE TABLE Vacinacao (
 	IdVacinacao INTEGER IDENTITY(1,1) PRIMARY KEY,
-    IdCarteiraVacinancao INTEGER,
+    IdCarteiraVacinacao INTEGER,
     IdVacina INTEGER,
     DataAplicacao DATE,
     IdVeterinario INTEGER,
@@ -177,7 +177,7 @@ ALTER TABLE CarteiraVacinacao ADD CONSTRAINT FK_carteiravacinacao_cachorro
     REFERENCES Cachorro (IdCachorro);
  
 ALTER TABLE Vacinacao ADD CONSTRAINT FK_vacinacao_carteira
-    FOREIGN KEY (IdCarteiraVacinancao)
+    FOREIGN KEY (IdCarteiraVacinacao)
     REFERENCES CarteiraVacinacao (IdCarteiraVacinacao);
  
 ALTER TABLE Vacinacao ADD CONSTRAINT FK_vacinacao_vacina
@@ -290,7 +290,7 @@ VALUES
 	('Arny', 'Grande', '2015-06-03', 'Golden Retriever', 'Macho', 7, 4, 1, 1, 9, 9),
 	('Bird', 'Médio', '2016-02-16', 'Golden Retriever', 'Macho', 51, 4, 6, 0, 4, 0),
 	('Aurelie', 'Médio', '2016-09-30', 'Golden Retriever', 'Fêmea', 30, 4, 6, 0, 5, 0),
-	('Avrit', 'Médio', '2019-12-04', 'Golden Retriever', 'Macho', 51, 8, 7, 0, 0, 0),
+	('Avrit', 'Médio', '2019-12-04', 'Golden Retriever', 'Macho', 51, 8, 7, 1, 0, 3),
 	('Noreen', 'Pequeno', '2020-01-17', 'Golden Retriever', 'Fêmea', 89, 8, 7, 0, 0, 0);
 
 INSERT INTO Venda
