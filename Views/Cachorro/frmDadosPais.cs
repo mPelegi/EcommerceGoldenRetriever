@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
 {
-    public partial class frmPais : Form
+    public partial class frmDadosPais : Form
     {
         private CachorroModel Cachorro { get; set; }
 
-        public frmPais()
+        public frmDadosPais()
         {
             InitializeComponent();
         }
@@ -24,7 +24,7 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
             LimparDados();
 
             Cachorro = new CachorroBLL().ObterPeloId(idCachorro);
-            
+
             if (Cachorro.IdMatriz > 0 && Cachorro.IdPadreador > 0)
             {
                 lblPais.Text = Cachorro.Sexo == "Fêmea" ? "Matriz" : "Padreador";
@@ -39,12 +39,12 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
             lblNascimento.Text += Convert.ToString(Cachorro.DataNascimento);
             lblRaca.Text += Cachorro.Raca;
             lblSexo.Text += Cachorro.Sexo;
-            lblPedigree.Text+= Convert.ToString(Cachorro.Pedigree);
+            lblPedigree.Text += Convert.ToString(Cachorro.Pedigree);
 
             ShowDialog();
         }
 
-        public void LimparDados()
+        private void LimparDados()
         {
             lblPais.Text = "-";
             lblId.Text = "Id: ";

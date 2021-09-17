@@ -1,7 +1,7 @@
 ﻿
 namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
 {
-    partial class frmPessoa
+    partial class frmDadosPessoa
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDadosPessoa));
             this.lblEndereco = new System.Windows.Forms.Label();
             this.lblTelefone = new System.Windows.Forms.Label();
             this.lblNascimento = new System.Windows.Forms.Label();
@@ -120,8 +121,14 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
             this.Controls.Add(this.lblNome);
             this.Controls.Add(this.lblId);
             this.Controls.Add(this.lblPessoa);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(350, 218);
+            this.MinimumSize = new System.Drawing.Size(350, 218);
             this.Name = "frmPessoa";
-            this.Text = "frmPessoa";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Informações da Pessoa";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace EcommerceGoldenRetriever.MVC.Models.Entidade
 {
-    public class DonoModel
+    public class CriadorModel
     {
-        public int IdDono { get; set; }
+        public int IdCriador { get; set; }
         public string Nome { get; set; }
         public string Documento { get; set; }
         public string Telefone { get; set; }
