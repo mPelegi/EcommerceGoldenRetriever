@@ -8,11 +8,11 @@ using System.Text;
 
 namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
 {
-    public class DonoDAL : BaseDAL<DonoModel>
+    public class CriadorDAL : BaseDAL<CriadorModel>
     {
         private ConexaoDAO conexao;
 
-        public DonoDAL(ConexaoDAO conexao)
+        public CriadorDAL(ConexaoDAO conexao)
         {
             this.conexao = conexao;
         }
@@ -20,7 +20,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
         {
             try
             {
-                string query = string.Format("DELETE FROM Dono WHERE IdDono = @id");
+                string query = string.Format("DELETE FROM Criador WHERE IdCriador = @id");
 
                 using (SqlCommand cmd = new SqlCommand(query, conexao.Get()))
                 {
@@ -35,13 +35,13 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
             }
         }
 
-        internal override List<DonoModel> GetAll()
+        internal override List<CriadorModel> GetAll()
         {
             try
             {
-                string query = string.Format("SELECT IdDono, Nome, Telefone, DataNascimento, Endereco FROM Dono");
+                string query = string.Format("SELECT IdCriador, Nome, Documento, Telefone, DataNascimento, Endereco FROM Criador");
 
-                List<DonoModel> retorno = new List<DonoModel>();
+                List<CriadorModel> retorno = new List<CriadorModel>();
 
                 using (SqlCommand cmd = new SqlCommand(query, conexao.Get()))
                 {
@@ -49,16 +49,17 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
 
                     while (dataReader.Read())
                     {
-                        DonoModel dono = new DonoModel
+                        CriadorModel criador = new CriadorModel
                         {
-                            IdDono = Convert.ToInt32(dataReader["IdDono"]),
+                            IdCriador = Convert.ToInt32(dataReader["IdCriador"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
+                            Documento = Convert.ToString(dataReader["Documento"]),
                             Telefone = Convert.ToString(dataReader["Telefone"]),
                             DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Endereco = Convert.ToString(dataReader["Endereco"])
                         };
 
-                        retorno.Add(dono);
+                        retorno.Add(criador);
                     }
 
                     return retorno;
@@ -70,17 +71,22 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
             }
         }
 
-        internal override List<DonoModel> GetByExample(DonoModel obj)
+        internal override List<CriadorModel> GetByExample(CriadorModel obj)
         {
             try
             {
                 StringBuilder query = new StringBuilder();
 
-                query.AppendLine("SELECT IdDono, Nome, Telefone, DataNascimento, Endereco FROM Dono WHERE 1 = 1");
+                query.AppendLine("SELECT IdCriador, Nome, Documento, Telefone, DataNascimento, Endereco FROM Criador WHERE 1 = 1");
 
                 if (string.IsNullOrEmpty(obj.Nome))
                 {
                     query.AppendLine("AND Nome LIKE '%@Nome%'");
+                }
+
+                if (string.IsNullOrEmpty(obj.Documento))
+                {
+                    query.AppendLine("AND Documento LIKE '@Documento'");
                 }
 
                 if (string.IsNullOrEmpty(obj.Telefone))
@@ -98,11 +104,12 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
                     query.AppendLine("AND Endereco LIKE '%@Endereco%'");
                 }
 
-                List<DonoModel> retorno = new List<DonoModel>();
+                List<CriadorModel> retorno = new List<CriadorModel>();
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
                     cmd.Parameters.AddWithValue("@Nome", obj.Nome);
+                    cmd.Parameters.AddWithValue("@Documento", obj.Documento);
                     cmd.Parameters.AddWithValue("@Telefone", obj.Telefone);
                     cmd.Parameters.AddWithValue("@DataNascimento", obj.DataNascimento);
                     cmd.Parameters.AddWithValue("@Endereco", obj.Endereco);
@@ -111,16 +118,17 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
 
                     while (dataReader.Read())
                     {
-                        DonoModel dono = new DonoModel
+                        CriadorModel criador = new CriadorModel
                         {
-                            IdDono = Convert.ToInt32(dataReader["IdDono"]),
+                            IdCriador = Convert.ToInt32(dataReader["IdCriador"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
+                            Documento = Convert.ToString(dataReader["Documento"]),
                             Telefone = Convert.ToString(dataReader["Telefone"]),
                             DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Endereco = Convert.ToString(dataReader["Endereco"])
                         };
 
-                        retorno.Add(dono);
+                        retorno.Add(criador);
                     }
 
                     return retorno;
@@ -132,11 +140,11 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
             }
         }
 
-        internal override DonoModel GetById(int id)
+        internal override CriadorModel GetById(int id)
         {
             try
             {
-                string query = string.Format(@"SELECT IdDono, Nome, Telefone, DataNascimento, Endereco FROM Dono WHERE IdDono = @id");
+                string query = string.Format(@"SELECT IdCriador, Nome, Documento, Telefone, DataNascimento, Endereco FROM Criador WHERE IdCriador = @id");
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
@@ -146,16 +154,17 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
 
                     if (dataReader.Read())
                     {
-                        DonoModel dono = new DonoModel
+                        CriadorModel criador = new CriadorModel
                         {
-                            IdDono = Convert.ToInt32(dataReader["IdDono"]),
+                            IdCriador = Convert.ToInt32(dataReader["IdCriador"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
+                            Documento = Convert.ToString(dataReader["Documento"]),
                             Telefone = Convert.ToString(dataReader["Telefone"]),
                             DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Endereco = Convert.ToString(dataReader["Endereco"])
                         };
 
-                        return dono;
+                        return criador;
                     }
                     else
                     {
@@ -169,15 +178,16 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
             }
         }
 
-        internal override bool Insert(DonoModel obj)
+        internal override bool Insert(CriadorModel obj)
         {
             try
             {
-                string query = string.Format(@"INSERT INTO Dono (Nome, Telefone, DataNascimento, Endereco) VALUES('Nome', 'Telefone', 'DataNascimento', 'Endereco')");
+                string query = string.Format(@"INSERT INTO Criador (Nome, Documento, Telefone, DataNascimento, Endereco) VALUES('@Nome', '@Documento', '@Telefone', '@DataNascimento', '@Endereco')");
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
                     cmd.Parameters.AddWithValue("@Nome", obj.Nome);
+                    cmd.Parameters.AddWithValue("@Documento", obj.Documento);
                     cmd.Parameters.AddWithValue("@Telefone", obj.Telefone);
                     cmd.Parameters.AddWithValue("@DataNascimento", obj.DataNascimento);
                     cmd.Parameters.AddWithValue("@Endereco", obj.Endereco);
@@ -191,18 +201,19 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
             }
         }
 
-        internal override bool Update(DonoModel obj)
+        internal override bool Update(CriadorModel obj)
         {
             try
             {
                 string query = string.Format(@"
-                    UPDATE Dono SET Nome = '@Nome', Telefone = '@Telefone', DataNascimento = '@DataNascimento', Endereco = '@Endereco' 
-                    WHERE IdDono = @IdDono");
+                    UPDATE Criador SET Nome = '@Nome', Documento = '@Documento', Telefone = '@Telefone', DataNascimento = '@DataNascimento', Endereco = '@Endereco' 
+                    WHERE IdCriador = @IdCriador");
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
-                    cmd.Parameters.AddWithValue("@IdDono", obj.IdDono);
+                    cmd.Parameters.AddWithValue("@IdCriador", obj.IdCriador);
                     cmd.Parameters.AddWithValue("@Nome", obj.Nome);
+                    cmd.Parameters.AddWithValue("@Documento", obj.Documento);
                     cmd.Parameters.AddWithValue("@Telefone", obj.Telefone);
                     cmd.Parameters.AddWithValue("@DataNascimento", obj.DataNascimento);
                     cmd.Parameters.AddWithValue("@Endereco", obj.Endereco);

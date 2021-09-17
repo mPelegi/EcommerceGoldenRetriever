@@ -16,7 +16,7 @@
 --DROP TABLE Venda;
 --DROP TABLE Cachorro;
 --DROP TABLE Comprador;
---DROP TABLE Dono;
+--DROP TABLE Criador;
 
 CREATE TABLE Cachorro (
     IdCachorro INTEGER IDENTITY(0,1) PRIMARY KEY,
@@ -29,7 +29,7 @@ CREATE TABLE Cachorro (
     IdMatriz INTEGER,
     IdPadreador INTEGER,
 	Reservado BIT,
-    IdDono INTEGER,
+    IdCriador INTEGER,
     IdComprador INTEGER
 );
 
@@ -135,9 +135,10 @@ CREATE TABLE CarteiraExame (
     DataEmissao DATE
 );
 
-CREATE TABLE Dono (
-    IdDono INTEGER IDENTITY(0,1) PRIMARY KEY,
+CREATE TABLE Criador (
+    IdCriador INTEGER IDENTITY(0,1) PRIMARY KEY,
     Nome NVARCHAR(50),
+    Documento NVARCHAR(50),
     Telefone NVARCHAR(50),
     DataNascimento DATE,
     Endereco NVARCHAR(50)
@@ -146,6 +147,7 @@ CREATE TABLE Dono (
 CREATE TABLE Comprador (
     IdComprador INTEGER IDENTITY(0,1) PRIMARY KEY,
     Nome NVARCHAR(50),
+    Documento NVARCHAR(50),
     Telefone NVARCHAR(50),
     DataNascimento DATE,
     Endereco NVARCHAR(50)
@@ -162,9 +164,9 @@ CREATE TABLE Venda (
     NotaFiscal NVARCHAR(50)
 );
 
-ALTER TABLE Cachorro ADD CONSTRAINT FK_cachorro_dono
-    FOREIGN KEY (IdDono)
-    REFERENCES Dono (IdDono);
+ALTER TABLE Cachorro ADD CONSTRAINT FK_cachorro_criador
+    FOREIGN KEY (IdCriador)
+    REFERENCES Criador (IdCriador);
  
 ALTER TABLE Cachorro ADD CONSTRAINT FK_cachorro_comprador
     FOREIGN KEY (IdComprador)
@@ -242,33 +244,33 @@ ALTER TABLE Venda ADD CONSTRAINT FK_venda_comprador
     FOREIGN KEY (IdComprador)
     REFERENCES Comprador (IdComprador);
 	
-INSERT INTO Dono 
+INSERT INTO Criador 
 VALUES
-	('Sem Dono', '', NULL, ''),
-	('Winonah Vase', '8308431014', '1981-06-13', '20337 Cottonwood Place'),
-    ('Miranda Tooher', '5936814581', '1968-05-24', '02917 Golf Terrace'),
-    ('Ruperta Niaves', '4547158381', '1961-09-11', '20810 Bultman Hill'),
-    ('Rosalyn Scotfurth', '9342836182', '1995-09-22', '176 Cardinal Way'),
-    ('Buddy Wibrow', '9986530277', '1973-05-04', '81 Superior Park'),
-    ('Wadsworth Pash', '9728879076', '2003-06-17', '834 Upham Drive'),
-    ('Agnella Spavins', '3597217887', '1981-06-03', '42 Bultman Parkway'),
-    ('Miguela Bool', '9653687463', '1976-05-12', '096 Kropf Circle'),
-    ('Jocelyne Sacchetti', '2543694451', '1969-04-10', '156 Armistice Street'),
-    ('Denys Dawe', '9768474425', '1998-07-24', '6 Russell Road');
+	('Sem Criador', '', '', NULL, ''),
+	('Winonah Vase', '0000000000001', '8308431014', '1981-06-13', '20337 Cottonwood Place'),
+    ('Miranda Tooher', '0000000000002', '5936814581', '1968-05-24', '02917 Golf Terrace'),
+    ('Ruperta Niaves', '0000000000003', '4547158381', '1961-09-11', '20810 Bultman Hill'),
+    ('Rosalyn Scotfurth', '0000000000004', '9342836182', '1995-09-22', '176 Cardinal Way'),
+    ('Buddy Wibrow', '0000000000005', '9986530277', '1973-05-04', '81 Superior Park'),
+    ('Wadsworth Pash', '0000000000006', '9728879076', '2003-06-17', '834 Upham Drive'),
+    ('Agnella Spavins', '0000000000007', '3597217887', '1981-06-03', '42 Bultman Parkway'),
+    ('Miguela Bool', '0000000000008', '9653687463', '1976-05-12', '096 Kropf Circle'),
+    ('Jocelyne Sacchetti', '0000000000009', '2543694451', '1969-04-10', '156 Armistice Street'),
+    ('Denys Dawe', '0000000000010', '9768474425', '1998-07-24', '6 Russell Road');
 	
 INSERT INTO Comprador
 VALUES
-	('Sem Comprador', '', NULL, ''),
-	('Alena McRae', '7729302700', '1971-01-29', '559 Paget Terrace'),
-    ('Dermot Sawfoot', '6934981149', '1973-03-26', '9 Northwestern Park'),
-    ('Arielle Orrom', '3684155838', '1974-03-31', '1 Barnett Center'),
-    ('Jamison Lindermann', '3317627656', '1986-05-22', '689 Pond Junction'),
-    ('Deborah Dufton', '9351327738', '1960-07-25', '7718 Wayridge Drive'),
-    ('Kitti Caccavella', '4247496855', '1975-05-14', '92 Petterle Alley'),
-    ('Lenore Leadston', '2693528182', '1980-07-04', '31 Clarendon Road'),
-    ('Lincoln Wheatley', '9731535942', '1966-10-11', '07408 Troy Lane'),
-    ('Nicolina Matasov', '2092915850', '1991-06-30', '53 Vermont Court'),
-    ('Vitia Steely', '3593644895', '1980-08-29', '76 Aberg Street');
+	('Sem Comprador', '', '', NULL, ''),
+	('Alena McRae', '0000000000011','7729302700', '1971-01-29', '559 Paget Terrace'),
+    ('Dermot Sawfoot', '0000000000012', '6934981149', '1973-03-26', '9 Northwestern Park'),
+    ('Arielle Orrom', '0000000000013', '3684155838', '1974-03-31', '1 Barnett Center'),
+    ('Jamison Lindermann', '0000000000014', '3317627656', '1986-05-22', '689 Pond Junction'),
+    ('Deborah Dufton', '0000000000015', '9351327738', '1960-07-25', '7718 Wayridge Drive'),
+    ('Kitti Caccavella', '0000000000016', '4247496855', '1975-05-14', '92 Petterle Alley'),
+    ('Lenore Leadston', '0000000000017', '2693528182', '1980-07-04', '31 Clarendon Road'),
+    ('Lincoln Wheatley', '0000000000018', '9731535942', '1966-10-11', '07408 Troy Lane'),
+    ('Nicolina Matasov', '0000000000019', '2092915850', '1991-06-30', '53 Vermont Court'),
+    ('Vitia Steely', '0000000000020', '3593644895', '1980-08-29', '76 Aberg Street');
 	
 INSERT INTO Veterinario
 VALUES
@@ -293,11 +295,11 @@ VALUES
 
 INSERT INTO Venda
 VALUES
-	(1, 1, '2010-09-10', '2010-07-10', 'Finalizado', 865.36, '3124569978'),
-	(2, 2, '2011-03-05', '2011-01-10', 'Finalizado', 842.36, '3211954765'),
-	(3, 4, '2012-11-20', '2012-09-20', 'Finalizado', 812.45, '5461238971'),
-	(4, 6, '2013-04-21', '2013-02-21', 'Finalizado', 940.38, '8791235463'),
-	(6, 9, '2016-08-03', '2016-06-03', 'Finalizado', 972.20, '5916457355'),
+	(1, 1, '2010-09-10', '2010-07-10', 'Finalizado', 865.36, '1'),
+	(2, 2, '2011-03-05', '2011-01-10', 'Finalizado', 842.36, '2'),
+	(3, 4, '2012-11-20', '2012-09-20', 'Finalizado', 812.45, '3'),
+	(4, 6, '2013-04-21', '2013-02-21', 'Finalizado', 940.38, '4'),
+	(6, 9, '2016-08-03', '2016-06-03', 'Finalizado', 972.20, '5'),
 	(9, 3, null, '2021-08-04', 'Reservado', 300.00, '');
 	
 INSERT INTO CarteiraVacinacao

@@ -40,7 +40,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
         {
             try
             {
-                string query = string.Format("SELECT IdComprador, Nome, Telefone, DataNascimento, Endereco FROM Comprador");
+                string query = string.Format("SELECT IdComprador, Nome, Documento, Telefone, DataNascimento, Endereco FROM Comprador");
 
                 List<CompradorModel> retorno = new List<CompradorModel>();
 
@@ -54,6 +54,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
                         {
                             IdComprador = Convert.ToInt32(dataReader["IdComprador"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
+                            Documento = Convert.ToString(dataReader["Documento"]),
                             Telefone = Convert.ToString(dataReader["Telefone"]),
                             DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Endereco = Convert.ToString(dataReader["Endereco"])
@@ -77,11 +78,16 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
             {
                 StringBuilder query = new StringBuilder();
 
-                query.AppendLine("SELECT IdComprador, Nome, Telefone, DataNascimento, Endereco FROM Comprador WHERE 1 = 1");
+                query.AppendLine("SELECT IdComprador, Nome, Documento, Telefone, DataNascimento, Endereco FROM Comprador WHERE 1 = 1");
 
                 if (string.IsNullOrEmpty(obj.Nome))
                 {
                     query.AppendLine("AND Nome LIKE '%@Nome%'");
+                }
+
+                if (string.IsNullOrEmpty(obj.Documento))
+                {
+                    query.AppendLine("AND Documento LIKE '@Documento'");
                 }
 
                 if (string.IsNullOrEmpty(obj.Telefone))
@@ -104,6 +110,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
                     cmd.Parameters.AddWithValue("@Nome", obj.Nome);
+                    cmd.Parameters.AddWithValue("@Documento", obj.Documento);
                     cmd.Parameters.AddWithValue("@Telefone", obj.Telefone);
                     cmd.Parameters.AddWithValue("@DataNascimento", obj.DataNascimento);
                     cmd.Parameters.AddWithValue("@Endereco", obj.Endereco);
@@ -116,6 +123,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
                         {
                             IdComprador = Convert.ToInt32(dataReader["IdComprador"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
+                            Documento = Convert.ToString(dataReader["Documento"]),
                             Telefone = Convert.ToString(dataReader["Telefone"]),
                             DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Endereco = Convert.ToString(dataReader["Endereco"])
@@ -137,7 +145,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
         {
             try
             {
-                string query = string.Format(@"SELECT IdComprador, Nome, Telefone, DataNascimento, Endereco FROM Comprador WHERE IdComprador = @id");
+                string query = string.Format(@"SELECT IdComprador, Nome, Documento, Telefone, DataNascimento, Endereco FROM Comprador WHERE IdComprador = @id");
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
@@ -151,6 +159,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
                         {
                             IdComprador = Convert.ToInt32(dataReader["IdComprador"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
+                            Documento = Convert.ToString(dataReader["Documento"]),
                             Telefone = Convert.ToString(dataReader["Telefone"]),
                             DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Endereco = Convert.ToString(dataReader["Endereco"])
@@ -174,11 +183,12 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
         {
             try
             {
-                string query = string.Format(@"INSERT INTO Comprador (Nome, Telefone, DataNascimento, Endereco) VALUES('Nome', 'Telefone', 'DataNascimento', 'Endereco')");
+                string query = string.Format(@"INSERT INTO Comprador (Nome, Documento, Telefone, DataNascimento, Endereco) VALUES('@Nome', '@Documento' '@Telefone', '@DataNascimento', '@Endereco')");
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
                     cmd.Parameters.AddWithValue("@Nome", obj.Nome);
+                    cmd.Parameters.AddWithValue("@Documento", obj.Documento);
                     cmd.Parameters.AddWithValue("@Telefone", obj.Telefone);
                     cmd.Parameters.AddWithValue("@DataNascimento", obj.DataNascimento);
                     cmd.Parameters.AddWithValue("@Endereco", obj.Endereco);
@@ -197,7 +207,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
             try
             {
                 string query = string.Format(@"
-                    UPDATE Comprador SET Nome = '@Nome', Telefone = '@Telefone', DataNascimento = '@DataNascimento', Endereco = '@Endereco' 
+                    UPDATE Comprador SET Nome = '@Nome', Documento = '@Documento', Telefone = '@Telefone', DataNascimento = '@DataNascimento', Endereco = '@Endereco' 
                     WHERE IdComprador = @IdComprador"
                 );
 
@@ -205,6 +215,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Pessoa
                 {
                     cmd.Parameters.AddWithValue("@IdComprador", obj.IdComprador);
                     cmd.Parameters.AddWithValue("@Nome", obj.Nome);
+                    cmd.Parameters.AddWithValue("@Documento", obj.Documento);
                     cmd.Parameters.AddWithValue("@Telefone", obj.Telefone);
                     cmd.Parameters.AddWithValue("@DataNascimento", obj.DataNascimento);
                     cmd.Parameters.AddWithValue("@Endereco", obj.Endereco);

@@ -6,21 +6,25 @@ using System.Collections.Generic;
 
 namespace EcommerceGoldenRetriever.MVC.BLL.Pessoa
 {
-    public class DonoBLL
+    public class CriadorBLL
     {
-        private DonoDAL Dal;
+        private CriadorDAL Dal;
         private ConexaoDAO Conexao;
 
-        public DonoBLL()
+        public CriadorBLL()
         {
             try
             {
                 Conexao = new ConexaoDAO();
-                Dal = new DonoDAL(Conexao);
+                Dal = new CriadorDAL(Conexao);
             }
             catch (Exception e)
             {
                 throw;
+            }
+            finally
+            {
+                Conexao.Fechar();
             }
         }
 
@@ -42,7 +46,7 @@ namespace EcommerceGoldenRetriever.MVC.BLL.Pessoa
             }
         }
 
-        public List<DonoModel> ObterTodos()
+        public List<CriadorModel> ObterTodos()
         {
             try
             {
@@ -60,7 +64,7 @@ namespace EcommerceGoldenRetriever.MVC.BLL.Pessoa
             }
         }
 
-        public List<DonoModel> ObterPeloExemplo(DonoModel exemplo)
+        public List<CriadorModel> ObterPeloExemplo(CriadorModel exemplo)
         {
             try
             {
@@ -78,7 +82,7 @@ namespace EcommerceGoldenRetriever.MVC.BLL.Pessoa
             }
         }
 
-        public DonoModel ObterPeloId(int id)
+        public CriadorModel ObterPeloId(int id)
         {
             try
             {
@@ -96,7 +100,7 @@ namespace EcommerceGoldenRetriever.MVC.BLL.Pessoa
             }
         }
 
-        public bool Inserir(DonoModel dono)
+        public bool Inserir(CriadorModel dono)
         {
             try
             {
@@ -114,7 +118,7 @@ namespace EcommerceGoldenRetriever.MVC.BLL.Pessoa
             }
         }
 
-        public bool Atualizar(DonoModel dono)
+        public bool Atualizar(CriadorModel dono)
         {
             try
             {

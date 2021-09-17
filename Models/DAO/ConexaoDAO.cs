@@ -13,7 +13,6 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
         private SqlConnection connection;
         private SqlTransaction transaction;
         private static readonly string constring = @"Server=DESKTOP-GR81RMB\SQLEXPRESS;Database=EcommerceGolden;Trusted_Connection=True";
-        //private readonly string chaveLogin = "E9384ufdbuqndxLfoioKKjhKpotrity983ldg66";
         private bool isOpen = false;
         private ConexaoDAL dal;
 
@@ -21,8 +20,7 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
         {
             try
             {
-                connection = new SqlConnection(constring);
-
+                connection = new SqlConnection(constring);        
                 dal = new ConexaoDAL(connection);
             }
             catch (Exception)
@@ -31,87 +29,24 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
             }
         }
 
-        //private User VerficarToken(string chave)
-        //{
-        //    try
-        //    {
-        //        Abrir();
-
-        //        if (string.IsNullOrEmpty(chave) || string.IsNullOrWhiteSpace(chave))
-        //        {
-        //            throw new ConexaoException("Chave Inválida");
-        //        }
-
-        //        User retorno = dal.VerificarToken(chave);
-
-
-        //        if (retorno != null && VerificarUltimoAcesso(retorno.UltimoAcesso))
-        //        {
-        //            if (!dal.AtualizarUltimoAcesso(chave, retorno.Usuario))
-        //            {
-        //                throw new ConexaoException("Falha ao atualizar token de acesso, favor entrar em contato com o suporte");
-        //            };
-
-        //            return retorno;
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        Fechar();
-        //    }
-        //}
-
-        internal bool VerificarUltimoAcesso(string ultimoAcesso)
-        {
-            if (string.IsNullOrEmpty(ultimoAcesso))
-            {
-                return false;
-            }
-
-            DateTime dateInicial = DateTime.Parse(ultimoAcesso);
-
-            TimeSpan timeSpan = DateTime.Now - dateInicial;
-
-
-            if (timeSpan.TotalMinutes > 10)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-
-        }
-
         public void Abrir()
         {
-            if (!this.isOpen)
+            if (!isOpen)
             {
-                this.connection.Open();
+                connection.Open();
 
-                this.isOpen = true;
+                isOpen = true;
             }
 
         }
 
         public void Fechar()
         {
-            if (this.isOpen)
+            if (isOpen)
             {
-                this.connection.Close();
+                connection.Close();
 
-                this.isOpen = false;
+                isOpen = false;
             }
 
         }
@@ -120,7 +55,7 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
         {
             try
             {
-                this.transaction = this.connection.BeginTransaction();
+                transaction = connection.BeginTransaction();
             }
             catch (Exception)
             {
@@ -133,7 +68,7 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
 
             try
             {
-                return this.connection;
+                return connection;
             }
             catch (Exception)
             {
@@ -151,8 +86,8 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
                     throw new Exception("Não existe uma Transaction aberta para commitar");
                 }
 
-                this.transaction.Commit();
-                this.transaction = null;
+                transaction.Commit();
+                transaction = null;
             }
             catch (Exception)
             {
@@ -171,8 +106,8 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
                     throw new Exception("Não existe uma Transaction aberta para rollback");
                 }
 
-                this.transaction.Rollback();
-                this.transaction = null;
+                transaction.Rollback();
+                transaction = null;
             }
             catch (Exception)
             {
@@ -203,7 +138,7 @@ namespace EcommerceGoldenRetriever.MVC.Models.DAO
 
         public bool IsOpen()
         {
-            return this.isOpen;
+            return isOpen;
         }
     }
 }

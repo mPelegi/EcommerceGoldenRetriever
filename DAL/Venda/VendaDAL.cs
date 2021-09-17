@@ -61,6 +61,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Venda
                             DataReserva = dataReader["DataReserva"] == DBNull.Value ? DateTime.Now.ToString() : Convert.ToString(dataReader["DataReserva"]),
                             Status = Convert.ToString(dataReader["Status"]),
                             Valor = Convert.ToDecimal(dataReader["Valor"]),
+                            NotaFiscal = Convert.ToString(dataReader["NotaFiscal"])
                         };
                         venda.Cachorro = new CachorroBLL().ObterPeloId(venda.IdCachorro);
                         venda.Comprador = new CompradorBLL().ObterPeloId(venda.IdComprador);
@@ -214,7 +215,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Venda
             {
                 string query = string.Format(@"
                     INSERT INTO Venda (IdCachorro, IdComprador, DataCompra, DataReserva, Status, Valor, NotaFiscal)
-                    VALUES(IdCachorro, IdComprador, 'DataCompra', 'DataReserva', 'Status', Valor, 'NotaFiscal')"
+                    VALUES(@IdCachorro, @IdComprador, @DataCompra, @DataReserva, @Status, @Valor, @NotaFiscal)"
                 );
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
@@ -241,12 +242,13 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Venda
             try
             {
                 string query = string.Format(@"
-                    UPDATE Venda SET DataCompra = 'DataCompra', DataReserva = 'DataReserva', Status = 'Status', Valor = Valor, NotaFiscal = 'NotaFiscal'
+                    UPDATE Venda SET DataCompra = @DataCompra, DataReserva = @DataReserva, Status = @Status, Valor = @Valor, NotaFiscal = @NotaFiscal
                     WHERE IdVenda = @IdVenda"
                 );
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
                 {
+                    cmd.Parameters.AddWithValue("@IdVenda", obj.IdVenda);
                     cmd.Parameters.AddWithValue("@DataCompra", obj.DataCompra);
                     cmd.Parameters.AddWithValue("@DataReserva", obj.DataReserva);
                     cmd.Parameters.AddWithValue("@Status", obj.Status);

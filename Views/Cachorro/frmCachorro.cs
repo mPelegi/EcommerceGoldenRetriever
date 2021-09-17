@@ -1,6 +1,7 @@
 ﻿using EcommerceGoldenRetriever.MVC.BLL.Cachorro;
 using EcommerceGoldenRetriever.MVC.BLL.Pessoa;
 using EcommerceGoldenRetriever.MVC.Models.Entidade;
+using EcommerceGoldenRetriever.MVC.Views.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,36 +17,51 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
     {
         private List<CachorroModel> Cachorros { get; set; }
         private CachorroBLL Bll;
+        private frmAviso AvisoDialog = frmAviso.GetInstance();
 
         public frmCachorro()
         {
             Bll = new CachorroBLL();
             InitializeComponent();
             AtualizarDataGridView();
-            PopularComboBox();
+            AtualizarComboBox();
         }
 
         private void AtualizarDataGridView()
         {
-            dgvCachorros.Rows.Clear();
-            Cachorros = Bll.ObterTodos();
-
-            foreach (CachorroModel c in Cachorros)
+            try
             {
-                string reservado = (bool)c.Reservado ? "Sim" : "Não";
+                dgvCachorros.Rows.Clear();
+                Cachorros = Bll.ObterTodos();
 
-                dgvCachorros.Rows.Add(c.IdCachorro, c.Nome, c.Porte, c.DataNascimento, c.Raca, c.Sexo, c.Pedigree, "Matriz", "Padreador", reservado, "Dono", "Comprador");
+                foreach (CachorroModel c in Cachorros)
+                {
+                    string reservado = (bool)c.Reservado ? "Sim" : "Não";
+
+                    dgvCachorros.Rows.Add(c.IdCachorro, c.Nome, c.Porte, c.DataNascimento, c.Raca, c.Sexo, c.Pedigree, "Matriz", "Padreador", reservado, c.Criador.Nome, c.Comprador.Nome);
+                }
+            }
+            catch (Exception ex)
+            {
+                AvisoDialog.Popup("Erro ao atualizar DataGridView: \n" + ex.Message);
             }
         }
 
-        private void PopularComboBox()
+        private void LimparCampos()
         {
-            List<DonoModel> donos = new DonoBLL().ObterTodos();
+            txtbNome.Text = "";
+            txtbNascimento.Text = "";
+            txtbPedigree.Text = "";
+        }
+
+        private void AtualizarComboBox()
+        {
+            List<CriadorModel> donos = new CriadorBLL().ObterTodos();
             List<CompradorModel> compradores = new CompradorBLL().ObterTodos();
 
-            cmbbDono.DisplayMember = "Nome";
-            cmbbDono.ValueMember = "IdDono";
-            cmbbDono.DataSource = donos;
+            cmbbCriador.DisplayMember = "Nome";
+            cmbbCriador.ValueMember = "IdCriador";
+            cmbbCriador.DataSource = donos;
 
             cmbbComprador.DisplayMember = "Nome";
             cmbbComprador.ValueMember = "IdComprador";
@@ -72,44 +88,58 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
         {
             if ((e.ColumnIndex >= 0) && (e.RowIndex >= 0))
             {
-                frmPais pais = new frmPais();
-                frmPessoa pessoa = new frmPessoa();
+                frmDadosPais pais;
+                frmDadosPessoa pessoa;
+                frmEditarCachorro editar;
 
-                switch (dgvCachorros.Columns[e.ColumnIndex].Name)
+                try
                 {
-                    case "colMatriz":
-                        pais.CarregarDados(Cachorros[e.RowIndex].IdMatriz);
-                        break;
+                    switch (dgvCachorros.Columns[e.ColumnIndex].Name)
+                    {
+                        case "colMatriz":
+                            pais = new frmDadosPais();
+                            pais.CarregarDados(Cachorros[e.RowIndex].IdMatriz);
+                            break;
 
-                    case "colPadreador":
-                        pais.CarregarDados(Cachorros[e.RowIndex].IdPadreador);
-                        break;
+                        case "colPadreador":
+                            pais = new frmDadosPais();
+                            pais.CarregarDados(Cachorros[e.RowIndex].IdPadreador);
+                            break;
 
-                    case "colDono":
-                        pessoa.CarregarDadosDono(Cachorros[e.RowIndex].IdDono);
-                        break;
+                        case "colCriador":
+                            pessoa = new frmDadosPessoa();
+                            pessoa.CarregarDadosCriador(Cachorros[e.RowIndex].IdCriador);
+                            break;
 
-                    case "colComprador":
-                        pessoa.CarregarDadosComprador(Cachorros[e.RowIndex].IdComprador);
-                        break;
+                        case "colComprador":
+                            pessoa = new frmDadosPessoa();
+                            pessoa.CarregarDadosComprador(Cachorros[e.RowIndex].IdComprador);
+                            break;
 
-                    case "colCarteiras":
-                        
-                        break;
+                        case "colCarteiras":
 
-                    case "colEditar":
-                        //TODO
-                        Bll.Atualizar(Cachorros[e.RowIndex]);
-                        AtualizarDataGridView();
-                        break;
+                            break;
 
-                    case "colDeletar":
-                        Bll.Deletar(Cachorros[e.RowIndex].IdCachorro);
-                        AtualizarDataGridView();
-                        break;
+                        case "colEditar":
+                            editar = new frmEditarCachorro();
+                            editar.CarregarDados(Cachorros[e.RowIndex]);
+                            AtualizarDataGridView();
+                            AtualizarComboBox();
+                            break;
 
-                    default:
-                        break;
+                        case "colDeletar":
+                            Bll.Deletar(Cachorros[e.RowIndex].IdCachorro);
+                            AtualizarDataGridView();
+                            AtualizarComboBox();
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AvisoDialog.Popup("Erro ao executar ação: \n" + ex.Message);
                 }
             }
         }
@@ -126,75 +156,91 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
             int x = 0;
             int y = 0;
 
-            switch (dgvCachorros.Columns[e.ColumnIndex].Name)
+            try
             {
-                case "colDeletar":
-                    e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+                switch (dgvCachorros.Columns[e.ColumnIndex].Name)
+                {
+                    case "colDeletar":
+                        e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
-                    Bitmap deletar = Properties.Resources.delete;
+                        Bitmap deletar = Properties.Resources.delete;
 
-                    w = deletar.Width;
-                    h = deletar.Height;
-                    x = e.CellBounds.Left + (e.CellBounds.Width - w) / 2;
-                    y = e.CellBounds.Top + (e.CellBounds.Height - h) / 2; ;
+                        w = deletar.Width;
+                        h = deletar.Height;
+                        x = e.CellBounds.Left + (e.CellBounds.Width - w) / 2;
+                        y = e.CellBounds.Top + (e.CellBounds.Height - h) / 2; ;
 
-                    e.Graphics.DrawImage(deletar, new Rectangle(x, y, w, h));
-                    e.Handled = true;
-                    break;
+                        e.Graphics.DrawImage(deletar, new Rectangle(x, y, w, h));
+                        e.Handled = true;
+                        break;
 
-                case "colEditar":
-                    e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+                    case "colEditar":
+                        e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
-                    Bitmap editar = Properties.Resources.edit;
+                        Bitmap editar = Properties.Resources.edit;
 
-                    w = editar.Width;
-                    h = editar.Height;
-                    x = e.CellBounds.Left + (e.CellBounds.Width - w) / 2;
-                    y = e.CellBounds.Top + (e.CellBounds.Height - h) / 2;
+                        w = editar.Width;
+                        h = editar.Height;
+                        x = e.CellBounds.Left + (e.CellBounds.Width - w) / 2;
+                        y = e.CellBounds.Top + (e.CellBounds.Height - h) / 2;
 
-                    e.Graphics.DrawImage(editar, new Rectangle(x, y, w, h));
-                    e.Handled = true;
-                    break;
+                        e.Graphics.DrawImage(editar, new Rectangle(x, y, w, h));
+                        e.Handled = true;
+                        break;
 
-                case "colCarteiras":
-                    e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+                    case "colCarteiras":
+                        e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
-                    Bitmap carteiras = Properties.Resources.document;
+                        Bitmap carteiras = Properties.Resources.document;
 
-                    w = carteiras.Width;
-                    h = carteiras.Height;
-                    x = e.CellBounds.Left + (e.CellBounds.Width - w) / 2;
-                    y = e.CellBounds.Top + (e.CellBounds.Height - h) / 2;
+                        w = carteiras.Width;
+                        h = carteiras.Height;
+                        x = e.CellBounds.Left + (e.CellBounds.Width - w) / 2;
+                        y = e.CellBounds.Top + (e.CellBounds.Height - h) / 2;
 
-                    e.Graphics.DrawImage(carteiras, new Rectangle(x, y, w, h));
-                    e.Handled = true;
-                    break;
+                        e.Graphics.DrawImage(carteiras, new Rectangle(x, y, w, h));
+                        e.Handled = true;
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                AvisoDialog.Popup("Erro ao inserir imagens dinamicamente nos botões do DataGridView: \n" + ex.Message);
             }
         }
 
         private void btnAdicionar_Click(object sender, EventArgs e)
         {
-            CachorroModel cachorro = new CachorroModel
+            try
             {
-                Nome = txtbNome.Text,
-                Porte = Convert.ToString(cmbbPorte.SelectedItem),
-                DataNascimento = txtbNascimento.Text,
-                Raca = Convert.ToString(cmbbRaca.SelectedItem),
-                Sexo = Convert.ToString(cmbbSexo.SelectedItem),
-                Pedigree = Convert.ToInt32(txtbPedigree.Text),
-                IdMatriz = Convert.ToInt32(cmbbMatriz.SelectedValue),
-                IdPadreador = Convert.ToInt32(cmbbPadreador.SelectedValue),
-                Reservado = cmbbReservado.SelectedValue == "Sim" ? true : false,
-                IdDono = Convert.ToInt32(cmbbDono.SelectedValue),
-                IdComprador = Convert.ToInt32(cmbbComprador.SelectedValue)
-            };
+                CachorroModel cachorro = new CachorroModel
+                {
+                    Nome = txtbNome.Text,
+                    Porte = Convert.ToString(cmbbPorte.SelectedItem),
+                    DataNascimento = txtbNascimento.Text,
+                    Raca = Convert.ToString(cmbbRaca.SelectedItem),
+                    Sexo = Convert.ToString(cmbbSexo.SelectedItem),
+                    Pedigree = Convert.ToInt32(txtbPedigree.Text),
+                    IdMatriz = Convert.ToInt32(cmbbMatriz.SelectedValue),
+                    IdPadreador = Convert.ToInt32(cmbbPadreador.SelectedValue),
+                    Reservado = cmbbReservado.SelectedValue == "Sim" ? true : false,
+                    IdCriador = Convert.ToInt32(cmbbCriador.SelectedValue),
+                    IdComprador = Convert.ToInt32(cmbbComprador.SelectedValue)
+                };
 
-            Bll.Inserir(cachorro);
+                Bll.Inserir(cachorro);
 
-            AtualizarDataGridView();
+                LimparCampos();
+                AtualizarDataGridView();
+                AtualizarComboBox();
+            }
+            catch (Exception ex)
+            {
+                AvisoDialog.Popup("Erro ao inserir novo cadastro de cachorro: \n" + ex.Message);
+            }
         }
     }
 }

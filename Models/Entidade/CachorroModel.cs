@@ -13,14 +13,14 @@ namespace EcommerceGoldenRetriever.MVC.Models.Entidade
         public string Raca { get; set; } = "";
         public string Sexo { get; set; } = "";
         public int Pedigree { get; set; } = 0;
-        public int IdMatriz { get; set; } = 0;
-        public int IdPadreador { get; set; } = 0;
-        public int IdDono { get; set; } = 0;
+        public int IdMatriz { get; set; } = -1;
+        public int IdPadreador { get; set; } = -1;
+        public int IdCriador { get; set; } = -1;
         public bool? Reservado { get; set; } = false;
-        public int IdComprador { get; set; } = 0;
+        public int IdComprador { get; set; } = -1;
         public CachorroModel Matriz { get; set; }
         public CachorroModel Padreador { get; set; }
-        public DonoModel Dono { get; set; }
+        public CriadorModel Criador { get; set; }
         public CompradorModel Comprador { get; set; }
 
     }

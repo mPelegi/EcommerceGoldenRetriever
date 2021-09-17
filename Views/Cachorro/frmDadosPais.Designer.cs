@@ -1,7 +1,7 @@
 ﻿
 namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
 {
-    partial class frmPais
+    partial class frmDadosPais
     {
         /// <summary>
         /// Required designer variable.
@@ -29,14 +29,15 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDadosPais));
             this.lblPais = new System.Windows.Forms.Label();
-            this.lblId = new System.Windows.Forms.Label();
             this.lblNome = new System.Windows.Forms.Label();
             this.lblPorte = new System.Windows.Forms.Label();
             this.lblNascimento = new System.Windows.Forms.Label();
             this.lblRaca = new System.Windows.Forms.Label();
             this.lblSexo = new System.Windows.Forms.Label();
             this.lblPedigree = new System.Windows.Forms.Label();
+            this.lblId = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblPais
@@ -48,16 +49,6 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
             this.lblPais.Size = new System.Drawing.Size(20, 25);
             this.lblPais.TabIndex = 1;
             this.lblPais.Text = "-";
-            // 
-            // lblId
-            // 
-            this.lblId.AutoSize = true;
-            this.lblId.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblId.Location = new System.Drawing.Point(12, 43);
-            this.lblId.Name = "lblId";
-            this.lblId.Size = new System.Drawing.Size(29, 20);
-            this.lblId.TabIndex = 2;
-            this.lblId.Text = "Id: ";
             // 
             // lblNome
             // 
@@ -119,11 +110,21 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
             this.lblPedigree.TabIndex = 8;
             this.lblPedigree.Text = "Pedigree: ";
             // 
-            // frmPais
+            // lblId
+            // 
+            this.lblId.AutoSize = true;
+            this.lblId.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lblId.Location = new System.Drawing.Point(12, 43);
+            this.lblId.Name = "lblId";
+            this.lblId.Size = new System.Drawing.Size(29, 20);
+            this.lblId.TabIndex = 2;
+            this.lblId.Text = "Id: ";
+            // 
+            // frmDadosPais
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(301, 194);
+            this.ClientSize = new System.Drawing.Size(304, 196);
             this.Controls.Add(this.lblPedigree);
             this.Controls.Add(this.lblSexo);
             this.Controls.Add(this.lblRaca);
@@ -132,8 +133,14 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
             this.Controls.Add(this.lblNome);
             this.Controls.Add(this.lblId);
             this.Controls.Add(this.lblPais);
-            this.Name = "frmPais";
-            this.Text = "frmPais";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(320, 235);
+            this.MinimumSize = new System.Drawing.Size(320, 235);
+            this.Name = "frmDadosPais";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Informações dos Pais";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -142,12 +149,12 @@ namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
         #endregion
 
         private System.Windows.Forms.Label lblPais;
-        private System.Windows.Forms.Label lblId;
         private System.Windows.Forms.Label lblNome;
         private System.Windows.Forms.Label lblPorte;
         private System.Windows.Forms.Label lblNascimento;
         private System.Windows.Forms.Label lblRaca;
         private System.Windows.Forms.Label lblSexo;
         private System.Windows.Forms.Label lblPedigree;
+        private System.Windows.Forms.Label lblId;
     }
 }

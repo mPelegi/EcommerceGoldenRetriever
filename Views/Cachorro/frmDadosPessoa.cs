@@ -10,29 +10,29 @@ using System.Windows.Forms;
 
 namespace EcommerceGoldenRetriever.MVC.Views.Cachorro
 {
-    public partial class frmPessoa : Form
+    public partial class frmDadosPessoa : Form
     {
         private CompradorModel Comprador { get; set; }
-        private DonoModel Dono { get; set; }
+        private CriadorModel Criador { get; set; }
 
-        public frmPessoa()
+        public frmDadosPessoa()
         {
             InitializeComponent();
         }
 
-        public void CarregarDadosDono(int idDono)
+        public void CarregarDadosCriador(int idCriador)
         {
 
-            Dono = new DonoBLL().ObterPeloId(idDono);
+            Criador = new CriadorBLL().ObterPeloId(idCriador);
 
 
-            lblPessoa.Text = "Dono";
-            lblId.Text += Convert.ToString(Dono.IdDono);
-            lblNome.Text += Dono.Nome;
-            lblDocumento.Text += Dono.Documento;
-            lblTelefone.Text += Dono.Telefone;
-            lblNascimento.Text += Convert.ToString(Dono.DataNascimento);
-            lblEndereco.Text += Dono.Endereco;
+            lblPessoa.Text = "Criador";
+            lblId.Text += Convert.ToString(Criador.IdCriador);
+            lblNome.Text += Criador.Nome;
+            lblDocumento.Text += Criador.Documento;
+            lblTelefone.Text += Criador.Telefone;
+            lblNascimento.Text += Convert.ToString(Criador.DataNascimento);
+            lblEndereco.Text += Criador.Endereco;
 
             ShowDialog();
         }

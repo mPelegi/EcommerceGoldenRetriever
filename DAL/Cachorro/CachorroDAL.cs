@@ -1,4 +1,5 @@
-﻿using EcommerceGoldenRetriever.MVC.DAL.Base;
+﻿using EcommerceGoldenRetriever.MVC.BLL.Pessoa;
+using EcommerceGoldenRetriever.MVC.DAL.Base;
 using EcommerceGoldenRetriever.MVC.Models.DAO;
 using EcommerceGoldenRetriever.MVC.Models.Entidade;
 using System;
@@ -40,7 +41,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
         {
             try
             {
-                string query = string.Format("SELECT IdCachorro, Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdDono, IdComprador FROM Cachorro");
+                string query = string.Format("SELECT IdCachorro, Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdCriador, IdComprador FROM Cachorro");
                 List<CachorroModel> retorno = new List<CachorroModel>();
 
                 using (SqlCommand cmd = new SqlCommand(query, conexao.Get()))
@@ -61,12 +62,17 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
                             IdMatriz = Convert.ToInt32(dataReader["IdMatriz"]),
                             IdPadreador = Convert.ToInt32(dataReader["IdPadreador"]),
                             Reservado = dataReader["Reservado"] != DBNull.Value && (bool)dataReader["Reservado"],
-                            IdDono = Convert.ToInt32(dataReader["IdDono"]),
+                            IdCriador = Convert.ToInt32(dataReader["IdCriador"]),
                             IdComprador = Convert.ToInt32(dataReader["IdComprador"])
                         };
+                        cachorro.Criador = new CriadorBLL().ObterPeloId(cachorro.IdCriador);
+                        cachorro.Comprador = new CompradorBLL().ObterPeloId(cachorro.IdComprador);
 
                         retorno.Add(cachorro);
                     }
+
+                    
+
 
                     return retorno;
                 }
@@ -83,56 +89,61 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
             {
                 StringBuilder query = new StringBuilder();
 
-                query.Append("SELECT IdCachorro, Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdDono, IdComprador FROM Cachorro WHERE 1 = 1");
+                query.AppendLine("SELECT IdCachorro, Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdCriador, IdComprador FROM Cachorro WHERE 1 = 1 ");
 
                 if (obj.IdCachorro > 0)
                 {
-                    query.Append("AND IdCachorro = @IdCachorro");
+                    query.AppendLine("AND IdCachorro = @IdCachorro ");
                 }
 
-                if (string.IsNullOrEmpty(obj.Nome))
+                if (!string.IsNullOrEmpty(obj.Nome))
                 {
-                    query.Append("AND Nome = @Nome");
+                    query.AppendLine("AND Nome = @Nome ");
                 }
 
-                if (string.IsNullOrEmpty(obj.Porte))
+                if (!string.IsNullOrEmpty(obj.Porte))
                 {
-                    query.Append("AND Porte = @Porte");
+                    query.AppendLine("AND Porte = @Porte ");
                 }
 
-                if (string.IsNullOrEmpty(obj.DataNascimento))
+                if (!string.IsNullOrEmpty(obj.DataNascimento))
                 {
-                    query.Append("AND DataNascimento = @DataNascimento");
+                    query.AppendLine("AND DataNascimento = @DataNascimento ");
                 }
 
-                if (string.IsNullOrEmpty(obj.Raca))
+                if (!string.IsNullOrEmpty(obj.Raca))
                 {
-                    query.Append("AND Raca = @Raca");
+                    query.AppendLine("AND Raca = @Raca ");
                 }
 
-                if (string.IsNullOrEmpty(obj.Sexo))
+                if (!string.IsNullOrEmpty(obj.Sexo))
                 {
-                    query.Append("AND Sexo = @Sexo");
+                    query.AppendLine("AND Sexo = @Sexo ");
                 }
 
                 if (obj.Pedigree > 0)
                 {
-                    query.Append("AND Pedigree = @Pedigree");
+                    query.AppendLine("AND Pedigree = @Pedigree ");
                 }
 
-                if (obj.IdMatriz > 0)
+                if (obj.IdMatriz >= 0)
                 {
-                    query.Append("AND IdMatriz = @IdMatriz");
+                    query.AppendLine("AND IdMatriz = @IdMatriz ");
                 }
 
-                if (obj.IdPadreador > 0)
+                if (obj.IdPadreador >= 0)
                 {
-                    query.Append("AND IdPadreador = @IdPadreador");
+                    query.AppendLine("AND IdPadreador = @IdPadreador ");
                 }
 
                 if (obj.Reservado != null)
                 {
-                    query.Append("AND Reservado = @Reservado");
+                    query.AppendLine("AND Reservado = @Reservado ");
+                }
+
+                if (obj.IdCriador >= 0)
+                {
+                    query.AppendLine("AND IdCriador = @IdCriador ");
                 }
 
                 List<CachorroModel> retorno = new List<CachorroModel>();
@@ -148,7 +159,8 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
                     cmd.Parameters.AddWithValue("@Pedigree", obj.Pedigree);
                     cmd.Parameters.AddWithValue("@IdMatriz", obj.IdMatriz);
                     cmd.Parameters.AddWithValue("@IdPadreador", obj.IdPadreador);
-                    cmd.Parameters.AddWithValue("@Reservado", (bool)obj.Reservado ? 1 : 0);
+                    cmd.Parameters.AddWithValue("@Reservado", (bool) obj.Reservado ? 1 : 0);
+                    cmd.Parameters.AddWithValue("@IdCriador", obj.IdCriador);
 
                     SqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -159,16 +171,18 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
                             IdCachorro = Convert.ToInt32(dataReader["IdCachorro"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
                             Porte = Convert.ToString(dataReader["Porte"]),
-                            DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
+                            DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.Now.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Raca = Convert.ToString(dataReader["Raca"]),
                             Sexo = Convert.ToString(dataReader["Sexo"]),
                             Pedigree = Convert.ToInt32(dataReader["Pedigree"]),
                             IdMatriz = Convert.ToInt32(dataReader["IdMatriz"]),
                             IdPadreador = Convert.ToInt32(dataReader["IdPadreador"]),
                             Reservado = dataReader["Reservado"] != DBNull.Value && (bool)dataReader["Reservado"],
-                            IdDono = Convert.ToInt32(dataReader["IdDono"]),
+                            IdCriador = Convert.ToInt32(dataReader["IdCriador"]),
                             IdComprador = Convert.ToInt32(dataReader["IdComprador"])
                         };
+                        cachorro.Criador = new CriadorBLL().ObterPeloId(cachorro.IdCriador);
+                        cachorro.Comprador = new CompradorBLL().ObterPeloId(cachorro.IdComprador);
 
                         retorno.Add(cachorro);
                     }
@@ -187,7 +201,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
             try
             {
                 string query = string.Format(@"
-                    SELECT IdCachorro, Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdDono, IdComprador
+                    SELECT IdCachorro, Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdCriador, IdComprador
                     FROM Cachorro 
                     WHERE IdCachorro = @id"
                 );
@@ -205,16 +219,18 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
                             IdCachorro = Convert.ToInt32(dataReader["IdCachorro"]),
                             Nome = Convert.ToString(dataReader["Nome"]),
                             Porte = Convert.ToString(dataReader["Porte"]),
-                            DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.MinValue.ToString() : Convert.ToString(dataReader["DataNascimento"]),
+                            DataNascimento = dataReader["DataNascimento"] == DBNull.Value ? DateTime.Now.ToString() : Convert.ToString(dataReader["DataNascimento"]),
                             Raca = Convert.ToString(dataReader["Raca"]),
                             Sexo = Convert.ToString(dataReader["Sexo"]),
                             Pedigree = Convert.ToInt32(dataReader["Pedigree"]),
                             IdMatriz = Convert.ToInt32(dataReader["IdMatriz"]),
                             IdPadreador = Convert.ToInt32(dataReader["IdPadreador"]),
                             Reservado = dataReader["Reservado"] != DBNull.Value && (bool)dataReader["Reservado"],
-                            IdDono = Convert.ToInt32(dataReader["IdDono"]),
+                            IdCriador = Convert.ToInt32(dataReader["IdCriador"]),
                             IdComprador = Convert.ToInt32(dataReader["IdComprador"])
                         };
+                        cachorro.Criador = new CriadorBLL().ObterPeloId(cachorro.IdCriador);
+                        cachorro.Comprador = new CompradorBLL().ObterPeloId(cachorro.IdComprador);
 
                         return cachorro;
                     }
@@ -236,8 +252,8 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
             try
             {
                 string query = string.Format(@"
-                    INSERT INTO Cachorro (Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdDono, IdComprador) 
-                    VALUES(@Nome, @Porte, @DataNascimento, @Raca, @Sexo, @Pedigree, @IdMatriz, @IdPadreador, @Reservado, @IdDono, @IdComprador)"
+                    INSERT INTO Cachorro (Nome, Porte, DataNascimento, Raca, Sexo, Pedigree, IdMatriz, IdPadreador, Reservado, IdCriador, IdComprador) 
+                    VALUES(@Nome, @Porte, @DataNascimento, @Raca, @Sexo, @Pedigree, @IdMatriz, @IdPadreador, @Reservado, @IdCriador, @IdComprador)"
                 );
 
                 using (SqlCommand cmd = new SqlCommand(query.ToString(), conexao.Get()))
@@ -251,7 +267,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
                     cmd.Parameters.AddWithValue("@IdMatriz", obj.IdMatriz);
                     cmd.Parameters.AddWithValue("@IdPadreador", obj.IdPadreador);
                     cmd.Parameters.AddWithValue("@Reservado", (bool)obj.Reservado ? 1 : 0);
-                    cmd.Parameters.AddWithValue("@IdDono", obj.IdDono);
+                    cmd.Parameters.AddWithValue("@IdCriador", obj.IdCriador);
                     cmd.Parameters.AddWithValue("@IdComprador", obj.IdComprador);
 
                     return cmd.ExecuteNonQuery() > 0 ? true : false;
@@ -269,7 +285,7 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
             try
             {
                 string query = string.Format(@"
-                    UPDATE Cachorro SET Nome = @Nome, Porte = @Porte, DataNascimento = @DataNascimento, Raca = @Raca, Sexo = @Sexo, Pedigree = @Pedigree, IdMatriz = @IdMatriz, IdPadreador = @IdPadreador, Reservado = @Reservado
+                    UPDATE Cachorro SET Nome = @Nome, Porte = @Porte, DataNascimento = @DataNascimento, Raca = @Raca, Sexo = @Sexo, Pedigree = @Pedigree, IdMatriz = @IdMatriz, IdPadreador = @IdPadreador, Reservado = @Reservado, IdCriador = @IdCriador, IdComprador = @IdComprador 
                     WHERE IdCachorro = @IdCachorro"
                 );
 
@@ -285,6 +301,8 @@ namespace EcommerceGoldenRetriever.MVC.DAL.Cachorro
                     cmd.Parameters.AddWithValue("@IdMatriz", obj.IdMatriz);
                     cmd.Parameters.AddWithValue("@IdPadreador", obj.IdPadreador);
                     cmd.Parameters.AddWithValue("@Reservado", (bool)obj.Reservado ? 1 : 0);
+                    cmd.Parameters.AddWithValue("@IdCriador", obj.IdCriador);
+                    cmd.Parameters.AddWithValue("@IdComprador", obj.IdComprador);
 
                     return cmd.ExecuteNonQuery() > 0 ? true : false;
                 }
